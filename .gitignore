@@ -1,0 +1,16 @@
+# Private data
+internal/private.json
+
+# IDE paraphernalia
+.idea
+
+# Automatically generated files
+cmd/quotes.json
+core/help.json
+internal/quotes.json
+
+# Convenience scripts
+# convenience.sh
+
+# Hosting provider private data
+# Procfile
