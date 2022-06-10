@@ -1,0 +1,24 @@
+#!/usr/bin/sh
+
+# To set this directory as the default hooks reference for git, run: git config --local core.hooksPath hooks
+
+# This script is run before pushing to the remote repository.
+# It runs the updater, which in turn updates the required artefacts.
+
+# File does not exist.
+if [ ! -f "artefacts/quotes.json" ]; then
+  echo "{\"quotes\":[]}" > artefacts/quotes.json
+fi
+# File exists, but its empty.
+if [ -s "artefacts/quotes.json" ]; then
+  true
+else
+  echo "{\"quotes\":[]}" >> artefacts/quotes.json
+fi
+test -f cmd/quotes.json && rm cmd/quotes.json
+go generate ./... >> /dev/null 2>&1
+go run cmd/updater.go
+
+# Update modules other than updater.
+go generate ./... >> /dev/null 2>&1
+
