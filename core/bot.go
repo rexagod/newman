@@ -37,23 +37,24 @@ func initializeDatabase() (*sql.DB, error) {
 	db, err := sql.Open("mssql",
 		fmt.Sprintf("server=%s;user id=%s;password=%s;database=%s", R.server, R.userId, R.password, R.databaseName))
 	if err != nil {
-		return nil, fmt.Errorf("failed to initialize database: %w", err)
+		return nil, fmt.Errorf("failed to initialize database: %v", err)
+	}
+
+	// Ping database.
+	if err := db.PingContext(databaseCtx); err != nil {
+		return nil, fmt.Errorf("failed to ping database: %v", err)
 	}
 
 	// Create pre-requisites.
 	_, err = db.ExecContext(databaseCtx, queries.Q[queries.CREATENOTESTABLE])
 	if err != nil {
-		klog.Infof("failed to create table: %w", err)
+		return nil, fmt.Errorf("failed to create table: %v", err)
 	}
 	_, err = db.ExecContext(databaseCtx, queries.Q[queries.CREATEDELETEDMESSAGESTABLE])
 	if err != nil {
-		klog.Infof("failed to create table: %w", err)
+		return nil, fmt.Errorf("failed to create table: %v", err)
 	}
 
-	// Ping database.
-	if err := db.PingContext(databaseCtx); err != nil {
-		return nil, fmt.Errorf("failed to ping database: %w", err)
-	}
 	return db, nil
 }
 
@@ -69,9 +70,10 @@ func Start(l *internal.Loader) (*state.State, error) {
 	R.password = l.PrivateFields["password"]
 	R.databaseName = l.PrivateFields["database"]
 	R.database, err = initializeDatabase()
+
 	R.databaseContext = databaseCtx
 	if err != nil {
-		return nil, fmt.Errorf("failed to initialize database: %w", err)
+		return nil, fmt.Errorf("failed to initialize database: %v", err)
 	}
 
 	var s *state.State

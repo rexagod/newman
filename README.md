@@ -7,6 +7,15 @@ _Feel free to chime in!_
 ![The gang](./assets/seinfeld.jpg)
 
 ***
-#### TODOs:
-- ~~`core` needs some work, at the moment the code in `bot.go` is pretty much [this](https://github.com/diamondburned/arikawa#bare-minimum-bot). Need to look into the library a bit more.~~
-- ~~`quotes.json` needs to be consistent with the diff we infer based on the received response (basically need accountability for "update" operations). This is more of a one-time operation, because once we are able to fetch from all such endpoints, we'll be able to cache and maintain our own dataset.~~
+#### Development
+- The bot uses `mssql` for database management. To trigger an instance run,
+```bash
+docker run \
+  -e "ACCEPT_EULA=Y" \
+  -e "SA_PASSWORD=Qwertyuiop1#" \
+  -p 1433:1433 \
+  --name mssql \
+  -h mssql \
+  -d mcr.microsoft.com/mssql/server:2019-latest
+```
+- Replace the token placeholder in `internal/private.json` with a valid one and run `make run` to start the bot.

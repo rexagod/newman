@@ -1,8 +1,9 @@
 # Private data
-internal/private.json
+#internal/private.json
 
 # IDE paraphernalia
 .idea
+.run
 
 # Automatically generated files
 cmd/quotes.json

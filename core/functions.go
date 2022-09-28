@@ -52,7 +52,7 @@ func (b *Bot) Ping(*gateway.MessageCreateEvent) (string, error) {
 func (b *Bot) Nshow(*gateway.MessageCreateEvent) (string, error) {
 	s, err := showRows(queries.Q[queries.SHOW])
 	if err != nil {
-		return "", fmt.Errorf("failed to show rows: %w", err)
+		return "", fmt.Errorf("failed to show rows: %v", err)
 	}
 	return s, nil
 }
@@ -61,7 +61,7 @@ func (b *Bot) Nshow(*gateway.MessageCreateEvent) (string, error) {
 func (b *Bot) Nsdel(*gateway.MessageCreateEvent) (string, error) {
 	s, err := showRows(queries.Q[queries.SHOWDELETEDMESSAGES])
 	if err != nil {
-		return "", fmt.Errorf("failed to show rows: %w", err)
+		return "", fmt.Errorf("failed to show rows: %v", err)
 	}
 	return s, nil
 }
@@ -80,7 +80,7 @@ func (b *Bot) Nadd(e *gateway.MessageCreateEvent) (string, error) {
 	var s string
 	s, err = addRow(queries.Q[queries.ADD], message)
 	if err != nil {
-		return "", fmt.Errorf("failed to add row: %w", err)
+		return "", fmt.Errorf("failed to add row: %v", err)
 	}
 	return s, nil
 }
@@ -93,12 +93,12 @@ func (b *Bot) Nremove(e *gateway.MessageCreateEvent) (string, error) {
 	id := response[strings.Index(e.Content, op)+len(op)+1:]
 	_, err = strconv.Atoi(id)
 	if err != nil {
-		return "", fmt.Errorf("invalid id: %w", err)
+		return "", fmt.Errorf("invalid id: %v", err)
 	}
 	query := queries.Q[queries.REMOVE]
 	_, err = R.database.ExecContext(R.databaseContext, query, id)
 	if err != nil {
-		return "", fmt.Errorf("failed to execute query: %w", err)
+		return "", fmt.Errorf("failed to execute query: %v", err)
 	}
 	return "`Entry removed!`", nil
 }
@@ -114,7 +114,7 @@ func (b *Bot) Xkcd(e *gateway.MessageCreateEvent) (string, error) {
 		var response *http.Response
 		response, err = http.Get(url)
 		if err != nil {
-			return comic{}, fmt.Errorf("failed to fetch xkcd: %w", err)
+			return comic{}, fmt.Errorf("failed to fetch xkcd: %v", err)
 		}
 		defer func(response *http.Response) {
 			err := response.Body.Close()
@@ -125,19 +125,19 @@ func (b *Bot) Xkcd(e *gateway.MessageCreateEvent) (string, error) {
 		c := comic{}
 		err = json.NewDecoder(response.Body).Decode(&c)
 		if err != nil {
-			return comic{}, fmt.Errorf("failed to decode xkcd: %w", err)
+			return comic{}, fmt.Errorf("failed to decode xkcd: %v", err)
 		}
 		return c, nil
 	}
 	var c comic
 	c, err = fetchComic("https://xkcd.com/info.0.json")
 	if err != nil {
-		return "", fmt.Errorf("failed to fetch xkcd: %w", err)
+		return "", fmt.Errorf("failed to fetch xkcd: %v", err)
 	}
 	totalComics := c.Num
 	c, err = fetchComic(fmt.Sprintf("https://xkcd.com/%d/info.0.json", rand.Intn(totalComics)))
 	if err != nil {
-		return "", fmt.Errorf("failed to fetch xkcd: %w", err)
+		return "", fmt.Errorf("failed to fetch xkcd: %v", err)
 	}
 	return c.Image, nil
 }
@@ -179,7 +179,7 @@ func (b *Bot) Help(*gateway.MessageCreateEvent) (string, error) {
 	var h help
 	err = json.Unmarshal(marshalledHelp, &h)
 	if err != nil {
-		return "", fmt.Errorf("failed to unmarshal help: %w", err)
+		return "", fmt.Errorf("failed to unmarshal help: %v", err)
 	}
 	commands := []string{"```yaml\n---"}
 	for k := range h.Commands {

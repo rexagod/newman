@@ -33,6 +33,15 @@ cleanup:
 install:
 	@go mod tidy
 
+# Container cleanup.
+docker-clean:
+	@docker kill mssql && docker rm mssql
+
+# Start containers.
+docker-run:
+	@docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Qwertyuiop1#" -p 1433:1433 --name mssql -h mssql -d mcr.microsoft.com/mssql/server:2019-latest
+	@sleep 10
+
 # Run the bot.
-run: cleanup populate install
+run: cleanup populate install docker-clean docker-run
 	@go run ./...
