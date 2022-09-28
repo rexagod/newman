@@ -10,8 +10,5 @@ cmd/quotes.json
 core/help.json
 internal/quotes.json
 
-# Convenience scripts
+# Scripts
 # convenience.sh
-
-# Hosting provider private data
-# Procfile

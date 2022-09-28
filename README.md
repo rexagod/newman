@@ -8,14 +8,5 @@ _Feel free to chime in!_
 
 ***
 #### Development
-- The bot uses `mssql` for database management. To trigger an instance run,
-```bash
-docker run \
-  -e "ACCEPT_EULA=Y" \
-  -e "SA_PASSWORD=Qwertyuiop1#" \
-  -p 1433:1433 \
-  --name mssql \
-  -h mssql \
-  -d mcr.microsoft.com/mssql/server:2019-latest
-```
-- Replace the token placeholder in `internal/private.json` with a valid one and run `make run` to start the bot.
+
+Please refer the [CONTRIBUTING.md](./CONTRIBUTING.md) file for more information on how to contribute to this project.
