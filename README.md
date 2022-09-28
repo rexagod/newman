@@ -4,7 +4,12 @@ Newman is a discord bot that aims to have functionalities that ultimately revolv
 
 _Feel free to chime in!_
 
+<details>
+<summary>The Gang!</summary>
+
 ![The gang](./assets/seinfeld.jpg)
+
+</details>
 
 ***
 #### Development
