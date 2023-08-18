@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/usr/bin/env bash
 
 # To set this directory as the default hooks reference for git, run: git config --local core.hooksPath hooks
 
@@ -21,4 +21,3 @@ go run cmd/updater.go
 
 # Update modules other than updater.
 go generate ./... >> /dev/null 2>&1
-
