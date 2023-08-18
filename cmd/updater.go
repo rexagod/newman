@@ -10,12 +10,14 @@ import (
 	"fmt"
 	"io/fs"
 	"io/ioutil"
-	"k8s.io/klog/v2"
 	"net/http"
 	"sort"
 	"strings"
+
+	"k8s.io/klog/v2"
 )
 
+const ENDPOINT_URL = "https://raw.githubusercontent.com/rexagod/seinfeld-api/master/quotes.json"
 const ENDPOINT_DOWN = "ENDPOINT_DOWN"
 
 //go:generate cp ../artefacts/quotes.json ./quotes.json
@@ -34,7 +36,7 @@ func fetchAndSanitizeQuotes() ([]string, error) {
 	}
 	endpoints := []endpoint{
 		{
-			url:        "https://seinfeld-quotes.herokuapp.com/quotes",
+			url:        ENDPOINT_URL,
 			entrypoint: "quotes",
 			allowed: map[string]string{
 				"author": "",

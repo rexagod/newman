@@ -1,10 +1,14 @@
 package main
 
 import (
+	"os"
+	"os/signal"
+
 	"github.com/diamondburned/arikawa/v3/state"
+	"k8s.io/klog/v2"
+
 	"github.com/rexagod/newman/core"
 	"github.com/rexagod/newman/internal"
-	"k8s.io/klog/v2"
 )
 
 func main() {
@@ -27,6 +31,8 @@ func main() {
 		}
 	}(s)
 
-	// Keep the bot running.
-	select {}
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, os.Interrupt)
+	<-sigs
+	klog.Info("received interrupt, shutting down")
 }
