@@ -5,3 +5,6 @@
 # Automatically generated files
 cmd/quotes.json
 internal/quotes.json
+
+# Secrets
+internal/private.json
