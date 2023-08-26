@@ -1,38 +1,27 @@
 package main
 
 import (
+	"log"
 	"os"
 	"os/signal"
+	"syscall"
 
-	"github.com/diamondburned/arikawa/v3/state"
-	"k8s.io/klog/v2"
-
+	"github.com/joho/godotenv"
 	"github.com/rexagod/newman/core"
-	"github.com/rexagod/newman/internal"
 )
 
 func main() {
-	var l internal.Loader
-	err := l.Load()
+	err := godotenv.Load(".env")
 	if err != nil {
-		klog.Fatalf("failed to load metadata: %v", err)
+		log.Fatal("Lol! I couldn't load the fkin env")
+	} else {
+		log.Println("Env loaded, my mane! Good work.")
 	}
 
-	// Start the bot.
-	var s *state.State
-	s, err = core.Start(&l)
-	if err != nil {
-		klog.Fatalf("failed to start bot: %v", err)
-	}
-	defer func(s *state.State) {
-		err := s.Close()
-		if err != nil {
-			klog.Errorf("failed to close bot: %v", err)
-		}
-	}(s)
+	core.DiscordConnect()
 
-	sigs := make(chan os.Signal, 1)
-	signal.Notify(sigs, os.Interrupt)
-	<-sigs
-	klog.Info("received interrupt, shutting down")
+	sc := make(chan os.Signal, 1)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
+	<-sc
+
 }

@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-echo "{\"quotes\":[]}" >artefacts/quotes.json
-# sed -i '' -e 's/"token": ".*"/"token": ""/g' internal/private.json

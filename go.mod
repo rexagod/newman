@@ -1,20 +1,14 @@
 module github.com/rexagod/newman
 
-go 1.17
+go 1.21.0
 
 require (
-	github.com/denisenkom/go-mssqldb v0.12.3
-	github.com/diamondburned/arikawa/v3 v3.3.2
-	k8s.io/klog/v2 v2.100.1
+	github.com/bwmarrin/discordgo v0.27.1
+	github.com/joho/godotenv v1.5.1
 )
 
 require (
-	github.com/go-logr/logr v1.2.4 // indirect
-	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
-	github.com/golang-sql/sqlexp v0.1.0 // indirect
-	github.com/gorilla/schema v1.2.0 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
-	golang.org/x/crypto v0.12.0 // indirect
-	golang.org/x/time v0.3.0 // indirect
+	github.com/gorilla/websocket v1.4.2 // indirect
+	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b // indirect
+	golang.org/x/sys v0.0.0-20201119102817-f84b799fce68 // indirect
 )
