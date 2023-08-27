@@ -8,6 +8,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/rexagod/newman/core"
+	"github.com/rexagod/newman/database"
 )
 
 func main() {
@@ -16,6 +17,16 @@ func main() {
 		log.Fatal("Lol! I couldn't load the fkin env")
 	} else {
 		log.Println("Env loaded, my mane! Good work.")
+	}
+
+	err = database.Initialize()
+	if err != nil {
+		log.Panic(err)
+	}
+
+	err = database.CreateTables()
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	core.DiscordConnect()
