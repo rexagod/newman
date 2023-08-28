@@ -19,6 +19,8 @@ func InteractionHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		cmds.PingCMD(s, i)
 	case "sync":
 		cmds.SyncCMD(s, i)
+	case "snipe":
+		cmds.SnipeCMD(s, i)
 	}
 
 }

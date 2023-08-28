@@ -40,6 +40,6 @@ func SnipeEvent(s *discordgo.Session, m *discordgo.MessageDelete) {
 	INSERT INTO snipes (message_id, channel_id, author_id, content)
 	VALUES ($1, $2, $3, $4)
 	`
-	database.GetDB().Exec(query, m.ID, m.ChannelID, m.BeforeDelete.ID, contentJSON)
+	database.GetDB().Exec(query, m.ID, m.ChannelID, m.BeforeDelete.Author.ID, contentJSON)
 
 }
