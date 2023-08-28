@@ -22,7 +22,7 @@ func SyncCMD(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseDeferredChannelMessageWithSource})
 
-		// utils.RegisterCommands(s, "")
+		utils.RegisterCommands(s, "")
 		s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 			Content: "Synced!",
 		})

@@ -7,6 +7,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/rexagod/newman/conf"
+	"github.com/rexagod/newman/core/events"
 	"github.com/rexagod/newman/utils"
 )
 
@@ -23,13 +24,14 @@ func DiscordConnect() {
 		return
 	}
 
-	Dg.AddHandler(InteractionHandler)
+	Dg.AddHandler(events.InteractionHandler)
+	Dg.AddHandler(events.SnipeEvent)
 
-	Dg.Identify.Intents |= discordgo.IntentsAll
-
-	Dg.StateEnabled = false
+	Dg.Identify.Intents = discordgo.IntentsAll
+	Dg.StateEnabled = true
 	Dg.LogLevel = discordgo.LogError
 	Dg.SyncEvents = true
+	Dg.State.MaxMessageCount = 1000
 
 	err = Dg.Open()
 	if err != nil {
