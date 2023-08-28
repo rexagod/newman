@@ -1,4 +1,4 @@
-package cmds
+package conf
 
 import "github.com/bwmarrin/discordgo"
 
@@ -9,5 +9,9 @@ var Commands = []*discordgo.ApplicationCommand{
 	{
 		Name:        "ping",
 		Description: "PONG!",
+	},
+	{
+		Name:        "sync",
+		Description: "Syncs commands with discord",
 	},
 }

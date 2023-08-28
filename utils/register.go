@@ -5,13 +5,13 @@ import (
 	"strconv"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/rexagod/newman/cmds"
+	"github.com/rexagod/newman/conf"
 )
 
 // TODO: remove all the synced commands before syncing again.
 
 func RegisterCommands(s *discordgo.Session, GuildId string) {
-	commands := cmds.Commands
+	commands := conf.Commands
 	for i, v := range commands {
 		cmd, err := s.ApplicationCommandCreate(s.State.User.ID, GuildId, v)
 

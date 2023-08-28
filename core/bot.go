@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/rexagod/newman/cmds"
+	"github.com/rexagod/newman/conf"
 	"github.com/rexagod/newman/utils"
 )
 
@@ -39,7 +39,7 @@ func DiscordConnect() {
 	log.Println("Yo! Connected to discord as " + Dg.State.User.Username + "[" + Dg.State.User.ID + "]")
 
 	apps, _ := Dg.ApplicationCommands(Dg.State.Application.ID, "")
-	cmds.ApplicationCommands = apps
+	conf.ApplicationCommands = apps
 
 	env := os.Getenv("ENV_TYPE")
 	log.Println("Loaded ENV as", env)

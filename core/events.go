@@ -17,5 +17,8 @@ func InteractionHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	switch i.ApplicationCommandData().Name {
 	case "ping":
 		cmds.PingCMD(s, i)
+	case "sync":
+		cmds.SyncCMD(s, i)
 	}
+
 }
