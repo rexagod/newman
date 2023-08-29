@@ -1,103 +1,63 @@
 package core
 
 import (
-	"context"
-	"database/sql"
-	"fmt"
-	_ "github.com/denisenkom/go-mssqldb"
-	"github.com/diamondburned/arikawa/v3/state"
-	"github.com/diamondburned/arikawa/v3/utils/bot"
-	"github.com/rexagod/newman/core/queries"
-	"github.com/rexagod/newman/internal"
-	"k8s.io/klog/v2"
+	"log"
+	"os"
+	"strconv"
+
+	"github.com/bwmarrin/discordgo"
+	"github.com/rexagod/newman/conf"
+	"github.com/rexagod/newman/core/events"
+	"github.com/rexagod/newman/utils"
 )
-
-type Bot struct {
-	Ctx *bot.Context
-}
-
-type runner struct {
-	database        *sql.DB
-	databaseContext context.Context
-	loader          *internal.Loader
-	prefix          string
-	token           string
-	server          string
-	userId          string
-	password        string
-	databaseName    string
-}
 
 var (
-	R           = &runner{}
-	databaseCtx = context.Background()
+	Dg *discordgo.Session
 )
 
-func initializeDatabase() (*sql.DB, error) {
-	db, err := sql.Open("mssql",
-		fmt.Sprintf("server=%s;user id=%s;password=%s;database=%s", R.server, R.userId, R.password, R.databaseName))
-	if err != nil {
-		return nil, fmt.Errorf("failed to initialize database: %v", err)
-	}
-
-	// Ping database.
-	if err := db.PingContext(databaseCtx); err != nil {
-		return nil, fmt.Errorf("failed to ping database: %v", err)
-	}
-
-	// Create pre-requisites.
-	_, err = db.ExecContext(databaseCtx, queries.Q[queries.CREATENOTESTABLE])
-	if err != nil {
-		return nil, fmt.Errorf("failed to create table: %v", err)
-	}
-	_, err = db.ExecContext(databaseCtx, queries.Q[queries.CREATEDELETEDMESSAGESTABLE])
-	if err != nil {
-		return nil, fmt.Errorf("failed to create table: %v", err)
-	}
-
-	return db, nil
-}
-
-func Start(l *internal.Loader) (*state.State, error) {
+func DiscordConnect() {
+	log.Println("Starting connection to Discord.")
 	var err error
-
-	// Initialize the runner object.
-	R.loader = l
-	R.prefix = l.PublicFields["prefix"]
-	R.token = l.PrivateFields["token"]
-	R.server = l.PrivateFields["server"]
-	R.userId = l.PrivateFields["user_id"]
-	R.password = l.PrivateFields["password"]
-	R.databaseName = l.PrivateFields["database"]
-	R.database, err = initializeDatabase()
-
-	R.databaseContext = databaseCtx
+	Dg, err = discordgo.New(os.Getenv("DISCORD_TOKEN"))
 	if err != nil {
-		return nil, fmt.Errorf("failed to initialize database: %v", err)
+		log.Fatal("Sed, Couldn't connect to Discord,", err)
+		return
 	}
 
-	var s *state.State
+	Dg.AddHandler(events.InteractionHandler)
+	Dg.AddHandler(events.SnipeEvent)
 
-	// Start the bot.
-	bot.Run(R.token, &Bot{},
-		func(ctx *bot.Context) error {
+	Dg.Identify.Intents = discordgo.IntentsAll
+	Dg.StateEnabled = true
+	Dg.LogLevel = discordgo.LogError
+	Dg.SyncEvents = true
+	Dg.State.MaxMessageCount = 1000
 
-			// Set prefix.
-			ctx.HasPrefix = bot.NewPrefix(R.prefix)
+	err = Dg.Open()
+	if err != nil {
+		log.Fatal("Sed, Couldn't connect to Discord,", err)
+	}
 
-			// Initiate handlers.
-			s = undoDelete()
-			if err := s.Open(context.Background()); err != nil {
-				klog.Fatalf("failed to open state: %v", err)
-			}
-			u, err := s.Me()
-			if err != nil {
-				klog.Fatalf("failed to get user: %v", err)
-			}
-			klog.Infof("Starting %s.", u.Username)
+	log.Println("Yo! Connected to discord as " + Dg.State.User.Username + "[" + Dg.State.User.ID + "]")
 
-			return nil
-		},
-	)
-	return s, nil
+	apps, _ := Dg.ApplicationCommands(Dg.State.Application.ID, "")
+	conf.ApplicationCommands = apps
+
+	env := os.Getenv("ENV_TYPE")
+	log.Println("Loaded ENV as", env)
+
+	syncTree := os.Getenv("SYNC_TREE")
+	toSync, err := strconv.ParseBool(syncTree)
+
+	if err != nil {
+		log.Fatal("Error parsing SYNC_TREE env:", err)
+	}
+
+	if toSync {
+		log.Println("Auto Tree syncing is enabled, syncing now..")
+		utils.RegisterCommands(Dg, "")
+	} else {
+		log.Println("Auto Tree syncing is disabled, skipping!")
+	}
+
 }
